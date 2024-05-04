@@ -115,6 +115,18 @@ resource "aws_iam_policy" "codepipeline_policy" {
         "logs:PutLogEvents"
       ],
       "Resource": "arn:${data.aws_partition.current.partition}:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:*"
+    },
+    {
+      "Effect":"Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": "arn:aws:s3:::zanoni-terraform/*"
+    },
+    {
+      "Effect":"Allow",
+      "Action": "*",
+      "Resource": "*"
     }
   ]
 }
