@@ -4,15 +4,10 @@
 #http://aws.amazon.com/agreement or other written agreement between Customer and either
 #Amazon Web Services, Inc. or Amazon Web Services EMEA SARL or both.
 
-variable "project_name" {
-  description = "Unique name for this project"
-  type        = string
-}
-
 variable "create_new_repo" {
   description = "Whether to create a new repository. Values are true or false. Defaulted to true always."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "create_new_role" {
@@ -30,11 +25,13 @@ variable "codepipeline_iam_role_name" {
 variable "source_repo_name" {
   description = "Source repo name of the CodeCommit repository"
   type        = string
+  default     = "terraform-eks-example"
 }
 
 variable "source_repo_branch" {
   description = "Default branch in the Source repo for which CodePipeline needs to be configured"
   type        = string
+  default     = "main"
 }
 
 variable "repo_approvers_arn" {
@@ -50,11 +47,16 @@ variable "environment" {
 variable "stage_input" {
   description = "Tags to be attached to the CodePipeline"
   type        = list(map(any))
+  default     = [
+    { name = "validate", category = "Test", owner = "AWS", provider = "CodeBuild", input_artifacts = "SourceOutput", output_artifacts = "ValidateOutput" },
+    { name = "plan", category = "Test", owner = "AWS", provider = "CodeBuild", input_artifacts = "ValidateOutput", output_artifacts = "PlanOutput" }
+  ]
 }
 
 variable "build_projects" {
   description = "Tags to be attached to the CodePipeline"
   type        = list(string)
+  default     = ["validate", "apply", "plan", "destroy"]
 }
 
 variable "builder_compute_type" {

@@ -5,6 +5,7 @@
 #Amazon Web Services, Inc. or Amazon Web Services EMEA SARL or both.
 
 locals {
-  account_id = data.aws_caller_identity.current.account_id
-  region     = data.aws_region.current.name
+  account_id   = data.aws_caller_identity.current.account_id
+  region       = data.aws_region.current.name
+  project_name = "${var.environment}-eks"
 }
