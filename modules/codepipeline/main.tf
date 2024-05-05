@@ -95,7 +95,7 @@ resource "aws_codepipeline" "terraform_pipeline" {
       output_artifacts = []
 
       configuration = {
-        ProjectName = "${var.project_name}-terraform-apply"
+        ProjectName = "${var.project_name}-apply"
       }
     }
   }

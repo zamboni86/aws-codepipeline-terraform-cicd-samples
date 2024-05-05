@@ -10,4 +10,4 @@ stage_input = [
   { name = "validate", category = "Test", owner = "AWS", provider = "CodeBuild", input_artifacts = "SourceOutput", output_artifacts = "ValidateOutput" },
   { name = "plan", category = "Test", owner = "AWS", provider = "CodeBuild", input_artifacts = "ValidateOutput", output_artifacts = "PlanOutput" }
 ]
-build_projects = ["validate", "plan"]
+build_projects = ["validate", "apply", "plan"]
