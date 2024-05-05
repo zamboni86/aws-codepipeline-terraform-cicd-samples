@@ -3,6 +3,9 @@
 #This AWS Content is provided subject to the terms of the AWS Customer Agreement available at
 #http://aws.amazon.com/agreement or other written agreement between Customer and either
 #Amazon Web Services, Inc. or Amazon Web Services EMEA SARL or both.
+data "aws_ssm_parameter" "github" {
+  name = "github-token"
+}
 
 resource "aws_codepipeline" "terraform_pipeline" {
 
@@ -25,17 +28,19 @@ resource "aws_codepipeline" "terraform_pipeline" {
     action {
       name             = "Download-Source"
       category         = "Source"
-      owner            = "AWS"
+      owner            = "ThirdParty"
       version          = "1"
-      provider         = "CodeCommit"
+      provider         = "GitHub"
       namespace        = "SourceVariables"
       output_artifacts = ["SourceOutput"]
       run_order        = 1
 
       configuration = {
-        RepositoryName       = var.source_repo_name
-        BranchName           = var.source_repo_branch
+        Owner = "zamboni86"
+        Repo                 = var.source_repo_name
+        Branch           = var.source_repo_branch
         PollForSourceChanges = "true"
+        OAuthToken = data.aws_ssm_parameter.github.value
       }
     }
   }
@@ -62,4 +67,36 @@ resource "aws_codepipeline" "terraform_pipeline" {
     }
   }
 
+  stage {
+    name = "verify-plan"
+
+    action {
+      name             = "Approval"
+      category         = "Approval"
+      owner            = "AWS"
+      version          = "1"
+      provider         = "Manual"
+      input_artifacts  = []
+      output_artifacts = []
+    }
+  }
+
+  stage {
+    name = "terraform-apply"
+
+    action {
+      name             = "Approval"
+      category         = "Build"
+      owner            = "AWS"
+      version          = "1"
+      provider         = "CodeBuild"
+      run_order        = 99
+      input_artifacts  = ["PlanOutput"]
+      output_artifacts = []
+
+      configuration = {
+        ProjectName = "${var.project_name}-terraform-apply"
+      }
+    }
+  }
 }
