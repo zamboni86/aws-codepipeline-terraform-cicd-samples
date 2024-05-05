@@ -1,4 +1,4 @@
-project_name       = "tf-project"
+project_name       = "dev-eks"
 environment        = "dev"
 source_repo_name   = "terraform-eks-example"
 source_repo_branch = "main"
@@ -10,4 +10,4 @@ stage_input = [
   { name = "validate", category = "Test", owner = "AWS", provider = "CodeBuild", input_artifacts = "SourceOutput", output_artifacts = "ValidateOutput" },
   { name = "plan", category = "Test", owner = "AWS", provider = "CodeBuild", input_artifacts = "ValidateOutput", output_artifacts = "PlanOutput" }
 ]
-build_projects = ["validate", "apply", "plan"]
+build_projects = ["validate", "apply", "plan", "destroy"]

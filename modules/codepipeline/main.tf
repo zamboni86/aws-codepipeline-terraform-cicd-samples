@@ -7,6 +7,10 @@ data "aws_ssm_parameter" "github" {
   name = "github-token"
 }
 
+locals {
+  extra_stages = var.environment == "dev" ? ["destroy"] : []
+}
+
 resource "aws_codepipeline" "terraform_pipeline" {
 
   name     = "${var.project_name}-pipeline"
@@ -85,7 +89,7 @@ resource "aws_codepipeline" "terraform_pipeline" {
     name = "terraform-apply"
 
     action {
-      name             = "Approval"
+      name             = "apply"
       category         = "Build"
       owner            = "AWS"
       version          = "1"
@@ -96,6 +100,29 @@ resource "aws_codepipeline" "terraform_pipeline" {
 
       configuration = {
         ProjectName = "${var.project_name}-apply"
+      }
+    }
+  }
+  dynamic "stage" {
+    for_each = local.extra_stages
+
+    content {
+  
+      name = "terraform-destroy"
+
+      action {
+        name             = "destroy"
+        category         = "Build"
+        owner            = "AWS"
+        version          = "1"
+        provider         = "CodeBuild"
+        run_order        = 100
+        input_artifacts  = ["PlanOutput"]
+        output_artifacts = []
+
+        configuration = {
+          ProjectName = "${var.project_name}-destroy"
+        }
       }
     }
   }

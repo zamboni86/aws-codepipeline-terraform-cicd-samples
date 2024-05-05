@@ -15,12 +15,19 @@ resource "aws_codebuild_project" "terraform_codebuild_project" {
   artifacts {
     type = var.build_project_source
   }
+
   environment {
     compute_type                = var.builder_compute_type
     image                       = var.builder_image
     type                        = var.builder_type
     privileged_mode             = true
     image_pull_credentials_type = var.builder_image_pull_credentials_type
+
+    environment_variable {
+      name  = "env"
+      value = var.environment
+    }
+
   }
   logs_config {
     cloudwatch_logs {
