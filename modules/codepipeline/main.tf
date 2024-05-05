@@ -40,11 +40,11 @@ resource "aws_codepipeline" "terraform_pipeline" {
       run_order        = 1
 
       configuration = {
-        Owner = "zamboni86"
+        Owner                = "zamboni86"
         Repo                 = var.source_repo_name
-        Branch           = var.source_repo_branch
+        Branch               = var.source_repo_branch
         PollForSourceChanges = "true"
-        OAuthToken = data.aws_ssm_parameter.github.value
+        OAuthToken           = data.aws_ssm_parameter.github.value
       }
     }
   }
@@ -107,7 +107,7 @@ resource "aws_codepipeline" "terraform_pipeline" {
     for_each = local.extra_stages
 
     content {
-  
+
       name = "terraform-destroy"
 
       action {

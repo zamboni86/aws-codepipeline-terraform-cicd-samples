@@ -18,9 +18,9 @@ resource "aws_kms_key" "encryption_key" {
 
 data "aws_iam_policy_document" "kms_key_policy_doc" {
   statement {
-    sid       = "Enable IAM User Permissions"
-    effect    = "Allow"
-    actions   = ["kms:*"]
+    sid     = "Enable IAM User Permissions"
+    effect  = "Allow"
+    actions = ["kms:*"]
     #checkov:skip=CKV_AWS_111:Without this statement, KMS key cannot be managed by root
     #checkov:skip=CKV_AWS_109:Without this statement, KMS key cannot be managed by root
     resources = ["*"]

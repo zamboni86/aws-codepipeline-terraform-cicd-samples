@@ -60,6 +60,6 @@ variable "kms_key_arn" {
   type        = string
 }
 
-variable "environment"{
+variable "environment" {
   type = string
 }
