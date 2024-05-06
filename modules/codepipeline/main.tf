@@ -8,7 +8,7 @@ data "aws_ssm_parameter" "github" {
 }
 
 locals {
-  extra_stages = var.environment == "dev" ? ["destroy"] : []
+  extra_stages = var.environment == "example" ? ["destroy"] : []
 }
 
 resource "aws_codepipeline" "terraform_pipeline" {
